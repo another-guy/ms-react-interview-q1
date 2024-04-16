@@ -1,7 +1,7 @@
 import './App.css';
 
 import React from 'react';
-import { NameLocationPageLayout } from './components/NameLocationPageLayout';
+import { NameLocationPageLayout } from './components/NameLocationPage';
 
 export function App(): JSX.Element {
   return (
