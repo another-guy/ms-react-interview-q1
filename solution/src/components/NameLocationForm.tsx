@@ -3,11 +3,14 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
+const allowedLocations = Object.freeze(['China', 'USA', 'Brazil'] as const);
+const locationList = Object.freeze(['', ...allowedLocations] as const);
+
 const nameLocationSchema = yup
   .object()
   .shape({
     name: yup.string().required(),
-    location: yup.string().required().oneOf(['China', 'USA', 'Brazil']),
+    location: yup.string().required().oneOf(allowedLocations),
   })
   .required();
 
@@ -29,6 +32,7 @@ export function NameLocationForm({
     resolver: yupResolver(nameLocationSchema),
     defaultValues: createDefaultValues(),
   });
+
   const { errors } = formState;
 
   const submitHandler = (data: NameLocationFormSchema) => {
@@ -36,6 +40,8 @@ export function NameLocationForm({
     reset();
   };
 
+  // TODO: styles: layout
+  // TODO: styles: validation errors
   return (
     <div>
       <form onSubmit={handleSubmit(submitHandler)}>
@@ -46,9 +52,14 @@ export function NameLocationForm({
         </div>
 
         <div>
-          {/* TODO: dropdown */}
           <label htmlFor='location'>Location</label>
-          <input {...register('location')} />
+          <select {...register('location')}>
+            {locationList.map((location) => (
+              <option key={location} value={location}>
+                {location}
+              </option>
+            ))}
+          </select>
           {errors.location && <div>{errors.location.message}</div>}
         </div>
 
@@ -62,5 +73,5 @@ export function NameLocationForm({
 }
 
 export function createDefaultValues(): NameLocationFormSchema {
-  return { name: '', location: '' };
+  return { name: '', location: '' as unknown as typeof allowedLocations[number] };
 }
