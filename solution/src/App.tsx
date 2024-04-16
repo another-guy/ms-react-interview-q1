@@ -1,24 +1,16 @@
 import './App.css';
-import React from 'react';
 
-function App() {
+import React from 'react';
+import { NameLocationPageLayout } from './components/NameLocationPageLayout';
+
+export function App(): JSX.Element {
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {/*
+      Normally, we would have a router here.
+      Since there's only one page, we'll just render the page unconditionally.
+      */}
+      <NameLocationPageLayout />
     </div>
   );
 }
-
-export default App;
