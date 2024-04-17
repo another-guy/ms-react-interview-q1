@@ -143,7 +143,7 @@ export function createNameLocationSchema({
       // by calling the callback (that delegates the work to the mock API).
       name: yup.string().required().test(
         'is-name-valid-according-to-api',
-        (name) => `The name "${name.value}" is invalid, please try another one.`,
+        (name) => `The name "${name.value}" has already been taken.`,
         async (name) => {
           // Igor's comment:
           //
