@@ -1,3 +1,4 @@
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 import { NameLocationEntry } from './types';
 
@@ -5,25 +6,24 @@ export interface NameLocationListProps {
   value: NameLocationEntry[];
 }
 
+const columns: GridColDef<NameLocationEntry>[] = [
+  { field: 'name', headerName: 'Name', valueGetter: (_, row) => row.name, width: 130 },
+  { field: 'location', headerName: 'Location', valueGetter: (_, row) => row.location, width: 130 },
+];
+
 export function NameLocationList({
   value: nameLocationList,
 }: NameLocationListProps): JSX.Element {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Location</th>
-        </tr>
-      </thead>
-      <tbody>
-        {nameLocationList.map(({ name, location }, index) => (
-          <tr key={index}>
-            <td>{name}</td>
-            <td>{location}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <DataGrid
+      columns={columns}
+      rows={nameLocationList.map((entry, index) => ({ id: index, ...entry }))}
+      initialState={{
+        pagination: {
+          paginationModel: { page: 0, pageSize: 5 },
+        },
+      }}
+      pageSizeOptions={[5, 10]}
+    />
   );
 }
