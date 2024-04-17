@@ -56,6 +56,7 @@ export function NameLocationForm({
     reset,
     formState,
     handleSubmit,
+    watch,
   } = useForm<NameLocationFormType>({
     resolver: yupResolver(nameLocationSchema),
     defaultValues: createDefaultValues(),
@@ -72,7 +73,7 @@ export function NameLocationForm({
     <form onSubmit={handleSubmit(submitHandler)}>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid item xs={12} md={6} lg={4}>
             <TextField
               fullWidth
               label='Name'
@@ -82,15 +83,16 @@ export function NameLocationForm({
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={12} md={6} lg={8}>
             <FormControl fullWidth>
               <InputLabel>Location (required)</InputLabel>
               <Select
                 {...register('location')}
+                value={watch('location')}
                 error={!!errors.location}
               >
                 {(['', ...allowedLocations]).map((location) => (
-                  <MenuItem key={location} value={location}>{location}</MenuItem>
+                  <MenuItem key={location} value={location}>{location || 'Not selected'}</MenuItem>
                 ))}
               </Select>
               {errors.location && <FormHelperText error={!!errors.location}>{errors.location.message}</FormHelperText>}
@@ -149,7 +151,7 @@ export function createNameLocationSchema({
           // It is worth debouncing here, but I'm keeping it simple.
           // In real project we don't want to spam the API endpoint with
           // requests on each and every key stroke.
-          return isNameValid(name);
+          return await isNameValid(name);
         },
       ),
       location: yup.string().required().oneOf(allowedLocations),
