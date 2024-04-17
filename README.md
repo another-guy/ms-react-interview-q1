@@ -8,7 +8,7 @@
 
 ## How to run the project
 
-**MAKE SURE THE COMMANDS ARE EXECUTED IN `solutions` SUBDIRECTORY.**
+**❗❗❗MAKE SURE THE COMMANDS ARE EXECUTED IN `solutions` SUBDIRECTORY.**
 
 Execute commands in bash:
 
@@ -23,6 +23,8 @@ Open http://localhost:3000 in your browser.
 ## What's DONE and NOT done:
 
 ![Result Page](./solution/docs/page.png)
+
+**❗❗❗Please, find my comments in code by searching for `Igor's comment`.**
 
 * Responsive form with the Name and Location fields with basic validation using mock API field.
 * Table with the list of Name/Location pairs.
