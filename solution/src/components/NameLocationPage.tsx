@@ -10,6 +10,10 @@ export function NameLocationPageLayout(): JSX.Element {
 
   const handleNameLocationFormSubmit =
     (newLocationEntry: NameLocationEntry) =>
+      // Igor's comment:
+      //
+      // The handler of this event would also be responsible for POSTing
+      // the new entry to the server. In this case, we just add it to the state.
       dispatch({ type: 'addEntry', newEntry: newLocationEntry });
 
   return (

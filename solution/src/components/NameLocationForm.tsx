@@ -123,7 +123,7 @@ export function NameLocationForm({
 }
 
 export function createDefaultValues(): NameLocationFormType {
-  return { name: '', location: '' as unknown as string };
+  return { name: '', location: '' };
 }
 
 export function createNameLocationSchema({
@@ -143,7 +143,14 @@ export function createNameLocationSchema({
       name: yup.string().required().test(
         'is-name-valid-according-to-api',
         (name) => `The name "${name.value}" is invalid, please try another one.`,
-        async (name) => isNameValid(name),
+        async (name) => {
+          // Igor's comment:
+          //
+          // It is worth debouncing here, but I'm keeping it simple.
+          // In real project we don't want to spam the API endpoint with
+          // requests on each and every key stroke.
+          return isNameValid(name);
+        },
       ),
       location: yup.string().required().oneOf(allowedLocations),
     })
