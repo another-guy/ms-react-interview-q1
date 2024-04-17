@@ -28,6 +28,7 @@ Open http://localhost:3000 in your browser.
 
 * Responsive form with the Name and Location fields with basic validation using mock API field.
 * Table with the list of Name/Location pairs.
+* Migrated to TypeScript from JavaScript for type safety and avoiding silly bugs.
 * Libraries used:
   * MUI — UI component library.
   * react-hook-form — dealing with HTML forms in React.
