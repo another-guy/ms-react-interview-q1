@@ -30,7 +30,6 @@ export interface NameLocationFormProps {
 export function NameLocationForm({
   onValidSubmit,
 }: NameLocationFormProps): JSX.Element {
-
   // Igor's comment:
   //
   // The following useState + useEffect is a trivial way to fetch the locations.
@@ -50,7 +49,6 @@ export function NameLocationForm({
   }, [],);
 
   const nameLocationSchema = createNameLocationSchema({ isNameValid, allowedLocations });
-
   const {
     register,
     reset,
@@ -62,7 +60,7 @@ export function NameLocationForm({
     defaultValues: createDefaultValues(),
   });
 
-  const { errors } = formState;
+  const { errors, isValidating } = formState;
 
   const submitHandler = (nameLocationForm: NameLocationFormType) => {
     onValidSubmit(nameLocationForm);
@@ -114,6 +112,7 @@ export function NameLocationForm({
               variant='contained'
               type="submit"
               color='primary'
+              disabled={isValidating}
             >
               Add
             </Button>
