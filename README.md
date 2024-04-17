@@ -8,6 +8,8 @@
 
 ## How to run the project
 
+**MAKE SURE THE COMMANDS ARE EXECUTED IN `solutions` SUBDIRECTORY.**
+
 Execute commands in bash:
 
 ```sh
