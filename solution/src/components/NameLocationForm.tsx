@@ -8,48 +8,66 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { getLocations, isNameValid } from '../mock-api/apis';
 
-const allowedLocations = Object.freeze(['China', 'USA', 'Brazil'] as const);
-const locationList = Object.freeze(['', ...allowedLocations] as const);
-
-const nameLocationSchema = yup
-  .object()
-  .shape({
-    name: yup.string().required(),
-    location: yup.string().required().oneOf(allowedLocations),
-  })
-  .required();
-
-type NameLocationFormSchema = yup.InferType<typeof nameLocationSchema>;
+// Igor's comment:
+//
+// Many things in this solution are intentionally trivialized.
+// While the real project would be more complex for robustness, scalability,
+// user-friendlyness, etc., I strongly believe that the code should be as
+// simple as possible.
+//
+// This project does not handle i11n, a11y, error handling, loading states, and
+// is not covered with automated tests.
 
 export interface NameLocationFormProps {
-  onValidSubmit: (data: NameLocationFormSchema) => void;
+  onValidSubmit: (nameLocationForm: NameLocationFormType) => void;
 }
 
 export function NameLocationForm({
   onValidSubmit,
 }: NameLocationFormProps): JSX.Element {
+
+  // Igor's comment:
+  //
+  // The following useState + useEffect is a trivial way to fetch the locations.
+  // It does not handle possible location changes, errors, loading states, etc.
+  // In real project we would use a library like SWR, React Query, or similar,
+  // and populate a state in the application store.
+  const [allowedLocations, setAllowedLocations] = React.useState<string[]>([]);
+  useEffect(() => {
+    const triggerLocationsFetch = async () => {
+      try {
+        setAllowedLocations(await getLocations());
+      } catch {
+        alert('Failed to fetch locations. Please try to refresh the page later.')
+      }
+    };
+    triggerLocationsFetch();
+  }, [],);
+
+  const nameLocationSchema = createNameLocationSchema({ isNameValid, allowedLocations });
+
   const {
     register,
     reset,
     formState,
     handleSubmit,
-  } = useForm<NameLocationFormSchema>({
+  } = useForm<NameLocationFormType>({
     resolver: yupResolver(nameLocationSchema),
     defaultValues: createDefaultValues(),
   });
 
   const { errors } = formState;
 
-  const submitHandler = (data: NameLocationFormSchema) => {
-    onValidSubmit(data);
+  const submitHandler = (nameLocationForm: NameLocationFormType) => {
+    onValidSubmit(nameLocationForm);
     reset();
   };
 
-  // TODO: styles: layout
   return (
     <form onSubmit={handleSubmit(submitHandler)}>
       <Box sx={{ flexGrow: 1 }}>
@@ -71,7 +89,7 @@ export function NameLocationForm({
                 {...register('location')}
                 error={!!errors.location}
               >
-                {locationList.map((location) => (
+                {(['', ...allowedLocations]).map((location) => (
                   <MenuItem key={location} value={location}>{location}</MenuItem>
                 ))}
               </Select>
@@ -104,6 +122,32 @@ export function NameLocationForm({
   );
 }
 
-export function createDefaultValues(): NameLocationFormSchema {
-  return { name: '', location: '' as unknown as typeof allowedLocations[number] };
+export function createDefaultValues(): NameLocationFormType {
+  return { name: '', location: '' as unknown as string };
 }
+
+export function createNameLocationSchema({
+  isNameValid,
+  allowedLocations,
+}: {
+  isNameValid: (name: string) => Promise<boolean>,
+  allowedLocations: string[],
+}) {
+  return yup
+    .object()
+    .shape({
+      // Igor's comment:
+      //
+      // Besides the required field, we also validate the name asynchronously
+      // by calling the callback (that delegates the work to the mock API).
+      name: yup.string().required().test(
+        'is-name-valid-according-to-api',
+        (name) => `The name "${name.value}" is invalid, please try another one.`,
+        async (name) => isNameValid(name),
+      ),
+      location: yup.string().required().oneOf(allowedLocations),
+    })
+    .required();
+}
+type NameLocationSchema = ReturnType<typeof createNameLocationSchema>;
+type NameLocationFormType = yup.InferType<NameLocationSchema>;
