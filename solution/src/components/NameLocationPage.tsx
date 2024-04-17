@@ -1,3 +1,4 @@
+import Grid from '@mui/material/Grid';
 import React, { useReducer } from 'react';
 import { NameLocationForm } from './NameLocationForm';
 import { NameLocationList } from './NameLocationList';
@@ -12,9 +13,13 @@ export function NameLocationPageLayout(): JSX.Element {
       dispatch({ type: 'addEntry', newEntry: newLocationEntry });
 
   return (
-    <div>
-      <NameLocationForm onValidSubmit={handleNameLocationFormSubmit} />
-      <NameLocationList value={state.entries} />
-    </div>
+    <Grid container direction='column' spacing={8}>
+      <Grid item>
+        <NameLocationForm onValidSubmit={handleNameLocationFormSubmit} />
+      </Grid>
+      <Grid item>
+        <NameLocationList value={state.entries} />
+      </Grid>
+    </Grid>
   )
 }

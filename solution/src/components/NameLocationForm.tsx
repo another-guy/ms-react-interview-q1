@@ -1,6 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
+import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -48,34 +51,56 @@ export function NameLocationForm({
 
   // TODO: styles: layout
   return (
-    <div>
-      <form onSubmit={handleSubmit(submitHandler)}>
-        <TextField
-          label='Name'
-          {...register('name')}
-          error={!!errors.name}
-          helperText={errors.name?.message}
-        />
+    <form onSubmit={handleSubmit(submitHandler)}>
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label='Name'
+              {...register('name')}
+              error={!!errors.name}
+              helperText={errors.name?.message}
+            />
+          </Grid>
 
-        <FormControl fullWidth>
-          <InputLabel>Location (required)</InputLabel>
-          <Select
-            {...register('location')}
-            error={!!errors.location}
-          >
-            {locationList.map((location) => (
-              <MenuItem key={location} value={location}>{location}</MenuItem>
-            ))}
-          </Select>
-          {errors.location && <FormHelperText error={!!errors.location}>{errors.location.message}</FormHelperText>}
-        </FormControl>
+          <Grid item xs={12}>
+            <FormControl fullWidth>
+              <InputLabel>Location (required)</InputLabel>
+              <Select
+                {...register('location')}
+                error={!!errors.location}
+              >
+                {locationList.map((location) => (
+                  <MenuItem key={location} value={location}>{location}</MenuItem>
+                ))}
+              </Select>
+              {errors.location && <FormHelperText error={!!errors.location}>{errors.location.message}</FormHelperText>}
+            </FormControl>
+          </Grid>
 
-        <div>
-          <button onClick={() => { reset(); }}>Clear</button>
-          <button type="submit">Add</button>
-        </div>
-      </form>
-    </div>
+          <Grid item xs={12}>
+            <Button
+              variant='outlined'
+              onClick={() => { reset(); }}
+              color='error'
+            >
+              Clear
+            </Button>
+
+            &nbsp;
+
+            <Button
+              variant='contained'
+              type="submit"
+              color='primary'
+            >
+              Add
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+    </form>
   );
 }
 

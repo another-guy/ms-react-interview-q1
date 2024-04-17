@@ -1,11 +1,13 @@
 import './App.css';
 
+import Container from '@mui/material/Container';
 import React from 'react';
 import { NameLocationPageLayout } from './components/NameLocationPage';
 
 export function App(): JSX.Element {
   return (
-    <div className="App">
+    <Container className="App">
+
       {/*
       Igor's comment:
 
@@ -14,6 +16,7 @@ export function App(): JSX.Element {
       we'll just render the page unconditionally.
       */}
       <NameLocationPageLayout />
-    </div>
+
+    </Container>
   );
 }
